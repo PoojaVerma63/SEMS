@@ -1,0 +1,31 @@
+<div class="d-flex justify-content-center align-items-center" style="min-height: 100vh; background: #f4f6f9;">
+  <div class="card shadow p-4" style="width: 380px;">
+    <h3 class="text-center mb-4">SEMS Login</h3>
+
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <div class="mb-3">
+        <label class="form-label">Email</label>
+        <input type="email" formControlName="email" class="form-control" placeholder="Enter email" />
+        <div class="text-danger small" *ngIf="loginForm.get('email')?.touched && loginForm.get('email')?.invalid">
+          Valid email is required
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Password</label>
+        <input type="password" formControlName="password" class="form-control" placeholder="Enter password" />
+        <div class="text-danger small" *ngIf="loginForm.get('password')?.touched && loginForm.get('password')?.invalid">
+          Password is required
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-primary w-100" [disabled]="loading">
+        {{ loading ? 'Logging in...' : 'Login' }}
+      </button>
+
+      <p class="text-center mt-3">
+        Don't have an account? <a routerLink="/signup">Sign up</a>
+      </p>
+    </form>
+  </div>
+</div>

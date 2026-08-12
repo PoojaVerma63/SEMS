@@ -1,0 +1,14 @@
+# .NET
+SEMS.API/bin/
+SEMS.API/obj/
+.vs/
+*.user
+
+# Angular
+sems-client/node_modules/
+sems-client/dist/
+sems-client/.angular/
+
+# OS
+Thumbs.db
+.DS_Store
