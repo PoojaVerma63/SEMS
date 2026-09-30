@@ -10,6 +10,6 @@ namespace SEMS.API.Data
         {
         }
 
-        // Baad me yahan aur DbSets add karenge (Employee, Attendance, Leave, etc.)
+        public DbSet<Employee> Employees { get; set; }
     }
 }

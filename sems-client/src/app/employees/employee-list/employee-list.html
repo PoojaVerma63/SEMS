@@ -1,0 +1,38 @@
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h3>Employees</h3>
+    <a routerLink="/employees/add" class="btn btn-primary">+ Add Employee</a>
+  </div>
+
+  <div *ngIf="loading" class="text-center text-muted">Loading...</div>
+
+  <table *ngIf="!loading" class="table table-bordered table-hover">
+    <thead class="table-dark">
+      <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Department</th>
+        <th>Designation</th>
+        <th>Joining Date</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let emp of employees">
+        <td>{{ emp.fullName }}</td>
+        <td>{{ emp.email }}</td>
+        <td>{{ emp.department }}</td>
+        <td>{{ emp.designation }}</td>
+        <td>{{ emp.joiningDate | date:'dd-MM-yyyy' }}</td>
+        <td><span class="badge bg-success">{{ emp.status }}</span></td>
+        <td>
+          <button class="btn btn-sm btn-danger" (click)="deleteEmployee(emp.id)">Delete</button>
+        </td>
+      </tr>
+      <tr *ngIf="employees.length === 0">
+        <td colspan="7" class="text-center text-muted">Koi employee nahi hai abhi</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

@@ -1,0 +1,38 @@
+<div class="container mt-4" style="max-width: 500px;">
+  <h3 class="mb-4">Add Employee</h3>
+
+  <form [formGroup]="employeeForm" (ngSubmit)="onSubmit()">
+    <div class="mb-3">
+      <label class="form-label">Full Name</label>
+      <input type="text" formControlName="fullName" class="form-control" />
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Email</label>
+      <input type="email" formControlName="email" class="form-control" />
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Department</label>
+      <input type="text" formControlName="department" class="form-control" />
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Designation</label>
+      <input type="text" formControlName="designation" class="form-control" />
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Joining Date</label>
+      <input type="date" formControlName="joiningDate" class="form-control" />
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Status</label>
+      <select formControlName="status" class="form-control">
+        <option value="Active">Active</option>
+        <option value="Inactive">Inactive</option>
+      </select>
+    </div>
+
+    <button type="submit" class="btn btn-success" [disabled]="loading">
+      {{ loading ? 'Saving...' : 'Save Employee' }}
+    </button>
+    <a routerLink="/employees" class="btn btn-secondary ms-2">Cancel</a>
+  </form>
+</div>
