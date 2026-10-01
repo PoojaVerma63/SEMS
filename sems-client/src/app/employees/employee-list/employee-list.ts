@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { EmployeeApi, Employee } from '../services/employee-api';
@@ -15,7 +15,10 @@ export class EmployeeList implements OnInit {
   employees: Employee[] = [];
   loading = true;
 
-  constructor(private employeeApi: EmployeeApi) {}
+  constructor(
+    private employeeApi: EmployeeApi,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
     this.loadEmployees();
@@ -27,10 +30,13 @@ export class EmployeeList implements OnInit {
       next: (data) => {
         this.employees = data;
         this.loading = false;
+        this.cdr.detectChanges();
       },
-      error: () => {
+      error: (err) => {
+        console.error('API error:', err);
         this.loading = false;
-        Swal.fire('Error', 'Employees load nahi ho paaye', 'error');
+        this.cdr.detectChanges();
+        Swal.fire('Error', `Employees load nahi ho paaye (status: ${err.status})`, 'error');
       }
     });
   }
@@ -50,7 +56,10 @@ export class EmployeeList implements OnInit {
             Swal.fire('Deleted', 'Employee delete ho gaya', 'success');
             this.loadEmployees();
           },
-          error: () => Swal.fire('Error', 'Delete nahi ho paaya', 'error')
+          error: (err) => {
+            console.error('Delete error:', err);
+            Swal.fire('Error', 'Delete nahi ho paaya', 'error');
+          }
         });
       }
     });

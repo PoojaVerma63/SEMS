@@ -1,0 +1,45 @@
+<div class="container mt-4" style="max-width: 900px;">
+  <h3 class="mb-4">Apply Leave</h3>
+
+  <form [formGroup]="leaveForm" (ngSubmit)="onSubmit()">
+    <div class="row g-3">
+      <div class="col-12 col-md-4">
+        <label class="form-label">Employee</label>
+        <select formControlName="employeeId" class="form-select">
+          <option value="">-- Select --</option>
+          <option *ngFor="let e of employees" [value]="e.id">{{ e.fullName }}</option>
+        </select>
+      </div>
+      <div class="col-12 col-md-4">
+        <label class="form-label">Leave Type</label>
+        <select formControlName="leaveType" class="form-select">
+          <option value="Casual">Casual</option>
+          <option value="Sick">Sick</option>
+          <option value="Earned">Earned</option>
+        </select>
+      </div>
+      <div class="col-12 col-md-4"></div>
+
+      <div class="col-12 col-md-4">
+        <label class="form-label">From Date</label>
+        <input type="date" formControlName="fromDate" class="form-control" />
+      </div>
+      <div class="col-12 col-md-4">
+        <label class="form-label">To Date</label>
+        <input type="date" formControlName="toDate" class="form-control" />
+      </div>
+
+      <div class="col-12">
+        <label class="form-label">Reason</label>
+        <textarea formControlName="reason" rows="3" class="form-control"></textarea>
+      </div>
+
+      <div class="col-12 mt-4">
+        <button type="submit" class="btn btn-success" [disabled]="loading">
+          {{ loading ? 'Saving...' : 'Apply Leave' }}
+        </button>
+        <a routerLink="/leaves" class="btn btn-secondary ms-2">Cancel</a>
+      </div>
+    </div>
+  </form>
+</div>

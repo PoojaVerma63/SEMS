@@ -1,0 +1,43 @@
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h3>Leave Requests</h3>
+    <a routerLink="/leaves/apply" class="btn btn-primary">+ Apply Leave</a>
+  </div>
+
+  <div *ngIf="loading" class="text-center text-muted">Loading...</div>
+
+  <table *ngIf="!loading" class="table table-bordered table-hover">
+    <thead class="table-dark">
+      <tr>
+        <th>Employee</th>
+        <th>Type</th>
+        <th>From</th>
+        <th>To</th>
+        <th>Reason</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let l of leaves">
+        <td>{{ l.employeeName }}</td>
+        <td>{{ l.leaveType }}</td>
+        <td>{{ l.fromDate | date:'dd-MM-yyyy' }}</td>
+        <td>{{ l.toDate | date:'dd-MM-yyyy' }}</td>
+        <td>{{ l.reason }}</td>
+        <td><span class="badge" [ngClass]="badgeClass(l.status)">{{ l.status }}</span></td>
+        <td>
+          <ng-container *ngIf="l.status === 'Pending'">
+            <button class="btn btn-sm btn-success me-1" (click)="review(l.id, 'Approved')">Approve</button>
+            <button class="btn btn-sm btn-warning me-1" (click)="review(l.id, 'Rejected')">Reject</button>
+            <button class="btn btn-sm btn-danger" (click)="deleteLeave(l.id)">Delete</button>
+          </ng-container>
+          <span *ngIf="l.status !== 'Pending'" class="text-muted">Reviewed</span>
+        </td>
+      </tr>
+      <tr *ngIf="leaves.length === 0">
+        <td colspan="7" class="text-center text-muted">Koi leave request nahi hai abhi</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

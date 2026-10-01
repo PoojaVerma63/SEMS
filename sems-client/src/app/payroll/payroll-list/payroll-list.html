@@ -1,0 +1,97 @@
+<div class="container mt-4">
+  <h3 class="mb-4">Payroll</h3>
+
+  <!-- Month / Year filter -->
+  <div class="d-flex align-items-center mb-3 flex-wrap gap-2">
+    <label class="fw-semibold">Month:</label>
+    <select class="form-select w-auto" [(ngModel)]="selectedMonth" (ngModelChange)="loadRecords()">
+      <option *ngFor="let m of months" [ngValue]="m.value">{{ m.name }}</option>
+    </select>
+    <label class="fw-semibold ms-2">Year:</label>
+    <input type="number" class="form-control w-auto" style="width: 110px !important;"
+           [(ngModel)]="selectedYear" (change)="loadRecords()" />
+  </div>
+
+  <!-- Salary entry form (3 column layout) -->
+  <form [formGroup]="payrollForm" (ngSubmit)="save()" class="card card-body mb-4">
+    <h6 class="mb-3">{{ monthName }} {{ selectedYear }} ki salary entry</h6>
+    <div class="row g-3">
+      <div class="col-12 col-md-4">
+        <label class="form-label">Employee</label>
+        <select formControlName="employeeId" class="form-select">
+          <option value="">-- Select --</option>
+          <option *ngFor="let e of employees" [value]="e.id">{{ e.fullName }}</option>
+        </select>
+      </div>
+      <div class="col-12 col-md-4">
+        <label class="form-label">Basic Salary</label>
+        <input type="number" formControlName="basicSalary" class="form-control" />
+      </div>
+      <div class="col-12 col-md-4">
+        <label class="form-label">Allowances</label>
+        <input type="number" formControlName="allowances" class="form-control" />
+      </div>
+
+      <div class="col-12 col-md-4">
+        <label class="form-label">Deductions</label>
+        <input type="number" formControlName="deductions" class="form-control" />
+      </div>
+      <div class="col-12 col-md-4">
+        <label class="form-label">Net Salary (preview)</label>
+        <input type="text" class="form-control" [value]="netPreview | currency:'INR'" readonly />
+      </div>
+
+      <div class="col-12">
+        <button type="submit" class="btn btn-success" [disabled]="saving">
+          {{ saving ? 'Saving...' : 'Add Salary Entry' }}
+        </button>
+      </div>
+    </div>
+  </form>
+
+  <div *ngIf="loading" class="text-center text-muted">Loading...</div>
+
+  <table *ngIf="!loading" class="table table-bordered table-hover">
+    <thead class="table-dark">
+      <tr>
+        <th>Employee</th>
+        <th>Basic</th>
+        <th>Allowances</th>
+        <th>Deductions</th>
+        <th>Net Salary</th>
+        <th>Status</th>
+        <th>Paid On</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let r of records">
+        <td>{{ r.employeeName }}</td>
+        <td>{{ r.basicSalary | currency:'INR' }}</td>
+        <td>{{ r.allowances | currency:'INR' }}</td>
+        <td>{{ r.deductions | currency:'INR' }}</td>
+        <td class="fw-semibold">{{ r.netSalary | currency:'INR' }}</td>
+        <td>
+          <span class="badge" [ngClass]="r.status === 'Paid' ? 'bg-success' : 'bg-warning text-dark'">{{ r.status }}</span>
+        </td>
+        <td>{{ toLocal(r.paidOn) | date:'dd-MM-yyyy hh:mm a' }}</td>
+        <td>
+          <ng-container *ngIf="r.status === 'Pending'">
+            <button class="btn btn-sm btn-success me-1" (click)="markPaid(r.id)">Mark Paid</button>
+            <button class="btn btn-sm btn-danger" (click)="deleteRecord(r.id)">Delete</button>
+          </ng-container>
+          <span *ngIf="r.status === 'Paid'" class="text-muted">Paid</span>
+        </td>
+      </tr>
+      <tr *ngIf="records.length === 0">
+        <td colspan="8" class="text-center text-muted">Is mahine ki koi salary entry nahi hai</td>
+      </tr>
+    </tbody>
+    <tfoot *ngIf="records.length > 0">
+      <tr class="table-light">
+        <td colspan="4" class="text-end fw-semibold">Total Net Salary</td>
+        <td colspan="4" class="fw-bold">{{ totalNet | currency:'INR' }}</td>
+      </tr>
+    </tfoot>
+  </table>
+</div>

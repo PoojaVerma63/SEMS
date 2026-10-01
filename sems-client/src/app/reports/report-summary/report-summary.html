@@ -1,0 +1,117 @@
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h3 class="mb-0">Reports</h3>
+      <small class="text-muted">{{ today | date:'fullDate' }}</small>
+    </div>
+    <button class="btn btn-outline-primary btn-sm" (click)="loadReports()">Refresh</button>
+  </div>
+
+  <div *ngIf="loading" class="text-center text-muted">Loading...</div>
+
+  <ng-container *ngIf="!loading && summary">
+    <div class="row g-3 mb-4">
+      <div class="col-12 col-md-4">
+        <div class="card text-bg-primary h-100">
+          <div class="card-body">
+            <div class="small">Total Employees</div>
+            <div class="fs-2 fw-bold">{{ summary.totalEmployees }}</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-md-4">
+        <div class="card text-bg-success h-100">
+          <div class="card-body">
+            <div class="small">Active Employees</div>
+            <div class="fs-2 fw-bold">{{ summary.activeEmployees }}</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-md-4">
+        <div class="card text-bg-secondary h-100">
+          <div class="card-body">
+            <div class="small">Inactive Employees</div>
+            <div class="fs-2 fw-bold">{{ summary.inactiveEmployees }}</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-12 col-md-4">
+        <div class="card h-100 border-success">
+          <div class="card-body">
+            <div class="small text-muted">Present Today</div>
+            <div class="fs-2 fw-bold text-success">{{ summary.presentToday }}</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-md-4">
+        <div class="card h-100 border-danger">
+          <div class="card-body">
+            <div class="small text-muted">Absent Today</div>
+            <div class="fs-2 fw-bold text-danger">{{ summary.absentToday }}</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-md-4">
+        <div class="card h-100 border-warning">
+          <div class="card-body">
+            <div class="small text-muted">Pending Leaves</div>
+            <div class="fs-2 fw-bold text-warning">{{ summary.pendingLeaves }}</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-12 col-md-4">
+        <div class="card h-100">
+          <div class="card-body">
+            <div class="small text-muted">Approved Leaves (is mahine)</div>
+            <div class="fs-2 fw-bold">{{ summary.approvedLeavesThisMonth }}</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-md-4">
+        <div class="card h-100">
+          <div class="card-body">
+            <div class="small text-muted">Payroll Paid (is mahine)</div>
+            <div class="fs-4 fw-bold text-success">{{ summary.payrollPaidAmount | currency:'INR' }}</div>
+            <small class="text-muted">{{ summary.payrollPaidCount }} entries</small>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-md-4">
+        <div class="card h-100">
+          <div class="card-body">
+            <div class="small text-muted">Payroll Pending (is mahine)</div>
+            <div class="fs-4 fw-bold text-warning">{{ summary.payrollPendingAmount | currency:'INR' }}</div>
+            <small class="text-muted">{{ summary.payrollPendingCount }} entries</small>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <h5 class="mb-3">Department-wise Employees</h5>
+    <table class="table table-bordered">
+      <thead class="table-dark">
+        <tr>
+          <th>Department</th>
+          <th style="width: 120px;">Employees</th>
+          <th>Share</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let d of departments">
+          <td>{{ d.department }}</td>
+          <td>{{ d.count }}</td>
+          <td>
+            <div class="progress" style="height: 18px;">
+              <div class="progress-bar" [style.width.%]="percent(d.count)">{{ percent(d.count) }}%</div>
+            </div>
+          </td>
+        </tr>
+        <tr *ngIf="departments.length === 0">
+          <td colspan="3" class="text-center text-muted">Koi employee nahi hai abhi</td>
+        </tr>
+      </tbody>
+    </table>
+  </ng-container>
+</div>
