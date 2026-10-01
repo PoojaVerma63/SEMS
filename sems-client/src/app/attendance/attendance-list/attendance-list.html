@@ -1,0 +1,72 @@
+<div class="container mt-4">
+  <h3 class="mb-4">Attendance</h3>
+
+  <!-- Mark attendance (3 column layout) -->
+  <form [formGroup]="markForm" (ngSubmit)="save()" class="card card-body mb-4">
+    <div class="row g-3">
+      <div class="col-12 col-md-4">
+        <label class="form-label">Employee</label>
+        <select formControlName="employeeId" class="form-select">
+          <option value="">-- Select --</option>
+          <option *ngFor="let e of employees" [value]="e.id">{{ e.fullName }}</option>
+        </select>
+      </div>
+      <div class="col-12 col-md-4">
+        <label class="form-label">Status</label>
+        <select formControlName="status" class="form-select">
+          <option value="Present">Present</option>
+          <option value="Absent">Absent</option>
+          <option value="Half Day">Half Day</option>
+        </select>
+      </div>
+      <div class="col-12 col-md-4">
+        <label class="form-label">Remarks</label>
+        <input type="text" formControlName="remarks" class="form-control" />
+      </div>
+
+      <div class="col-12">
+        <button type="submit" class="btn btn-success me-2" [disabled]="saving">
+          {{ saving ? 'Saving...' : 'Save Attendance' }}
+        </button>
+        <button type="button" class="btn btn-primary me-2" (click)="checkIn()">Check In (aaj)</button>
+        <button type="button" class="btn btn-warning" (click)="checkOut()">Check Out (aaj)</button>
+      </div>
+    </div>
+  </form>
+
+  <!-- Date filter -->
+  <div class="d-flex align-items-center mb-3">
+    <label class="me-2 fw-semibold">Date:</label>
+    <input type="date" class="form-control w-auto" [(ngModel)]="selectedDate" (ngModelChange)="onDateChange()" />
+  </div>
+
+  <div *ngIf="loading" class="text-center text-muted">Loading...</div>
+
+  <table *ngIf="!loading" class="table table-bordered table-hover">
+    <thead class="table-dark">
+      <tr>
+        <th>Employee</th>
+        <th>Check In</th>
+        <th>Check Out</th>
+        <th>Status</th>
+        <th>Remarks</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let r of records">
+        <td>{{ r.employeeName }}</td>
+        <td>{{ toLocal(r.checkIn) | date:'hh:mm a' }}</td>
+        <td>{{ toLocal(r.checkOut) | date:'hh:mm a' }}</td>
+        <td><span class="badge" [ngClass]="badgeClass(r.status)">{{ r.status }}</span></td>
+        <td>{{ r.remarks }}</td>
+        <td>
+          <button class="btn btn-sm btn-danger" (click)="deleteRecord(r.id)">Delete</button>
+        </td>
+      </tr>
+      <tr *ngIf="records.length === 0">
+        <td colspan="6" class="text-center text-muted">Is date ki koi attendance nahi hai</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
